@@ -1,6 +1,7 @@
 //
-// Section Variables
+// @variables
 //
+
 $include-html-section-classes: $include-html-classes !default;
 
 // We use these to set padding and hover factor
@@ -35,10 +36,12 @@ $content-selector: ".content" !default;
 $active-region-selector: ".active" !default;
 
 //
-// Section Mixins
+// @mixins
 //
 
-// basic styles for sections.js: positions
+// Section container base styles
+//
+// $section-type: Type of section. Default: accordion. Options: accordion, tabs.
 @mixin section-container-base($section-type: accordion) {
   width: 100%;
   position: relative;
@@ -66,7 +69,9 @@ $active-region-selector: ".active" !default;
   }
 }
 
-// foundation styles for sections
+// Section container styles
+//
+// $section-type: Type of section. Default: accordion. Options: accordion, tabs.
 @mixin section-container-style($section-type: accordion) {
 
   // Accordion container border styles
@@ -96,7 +101,9 @@ $active-region-selector: ".active" !default;
   }
 }
 
-//basic styles for section.js: section region positions
+// Section styles
+//
+// $section-type: Type of section. Default: accordion. Options: accordion, tabs, vertical-tabs, vertical-nav, horizontal-nav.
 @mixin section-base($section-type: accordion) {
 
   & > [data-section-title], & > #{$title-selector} {
@@ -122,13 +129,12 @@ $active-region-selector: ".active" !default;
 
   // Style for when Accordion
   @if $section-type == accordion {
-	margin: 0;
+    margin: 0;
     & > [data-section-title], & > #{$title-selector} { width: 100%; }
   }
 
   // Styles for when tabs
   @else if $section-type == tabs {
-
     & > [data-section-title], & > #{$title-selector} {
 	  width: auto;
       position: absolute;
@@ -139,7 +145,6 @@ $active-region-selector: ".active" !default;
 
   // Styles for when Vertical Tabs
   @else if $section-type == vertical-tabs {
-
     & > [data-section-title], & > #{$title-selector} {
 	  position: absolute;
 	  top:0;
@@ -158,50 +163,79 @@ $active-region-selector: ".active" !default;
 
   // Styles for when Vertical Nav
   @else if $section-type == vertical-nav {
+  	position: relative;
+      display: inline-block;
 
-	position: relative;
-    display: inline-block;
+  	& > [data-section-title], & > #{$title-selector} {
+  	  position: static;
+  	  width: auto;
+  	  a { display: block; }
+      }
 
-	& > [data-section-title], & > #{$title-selector} {
-	  position: static;
-	  width: auto;
-	  a { display: block; }
-    }
-
-	& > [data-section-content], & > #{$content-selector} {
-	    position: absolute;
-	    top:0;
-		#{$default-float}: 0;
-		z-index: 999;
-		min-width: $section-vertical-nav-min-width;
-	}
+  	& > [data-section-content], & > #{$content-selector} {
+  	    position: absolute;
+  	    top:0;
+  		#{$default-float}: 0;
+  		z-index: 999;
+  		min-width: $section-vertical-nav-min-width;
+  	}
   }
 
   // Styles for when Horizontal Nav
   @else if $section-type == horizontal-nav {
+  	position: relative;
+  	float: #{$default-float};
 
-	position: relative;
-	float: #{$default-float};
+  	& > [data-section-title], & > #{$title-selector} {
+  	  position: static;
+  	  width: auto;
+  	  a { display: block; }
+      }
 
-	& > [data-section-title], & > #{$title-selector} {
-	  position: static;
-	  width: auto;
-	  a { display: block; }
-    }
-
-	& > [data-section-content], & > #{$content-selector} {
-	  width: auto;
-	  position: absolute;
-	  top: 0;
-      #{$default-float}: 0;
-	  z-index: 999;
-	  min-width: $section-vertical-nav-min-width;
-	}
+  	& > [data-section-content], & > #{$content-selector} {
+  	  width: auto;
+  	  position: absolute;
+  	  top: 0;
+        #{$default-float}: 0;
+  	  z-index: 999;
+  	  min-width: $section-vertical-nav-min-width;
+  	}
   }
 }
 
-//foundation styles for section regions
-@mixin section-style($section-type:accordion, $title-selector: $title-selector, $content-selector: $content-selector, $title-padding:$section-title-padding, $title-color:$section-title-color, $title-font-size:$section-font-size, $title-bg:$section-title-bg, $title-bg-hover:$section-title-bg-hover, $title-bg-active:$section-title-bg-active, $title-color-active:$section-title-color-active, $content-bg:$section-content-bg, $content-padding:$section-content-padding, $section-border-size:$section-border-size, $section-border-style:$section-border-style, $section-border-color: $section-border-color) {
+// Styles for Foundation regions
+//
+// $section-type - Type of section. Default: accordion. Options: accordion, tabs, vertical-tabs.
+// $title-selector - CSS selector for the title (i.e. .title). Default: $title-selector.
+// $content-selector - CSS selector for content (i.e. .content). Default: $content-selector.
+// $title-padding - Padding around title selector. Default: $section-title-padding.
+// $title-color - Color of the title. Default: $section-title-color.
+// $title-font-size - Font size of the title. Default: $section-font-size.
+// $title-bg - Background of title. Default: $section-title-bg.
+// $title-bg-hover - Background of title on hover. Default: $section-title-bg-hover.
+// $title-bg-active - Background of title when active. Default: $section-title-bg-active.
+// $title-color-active - Color of title when active. Default: $section-title-color-active.
+// $content-bg - Background of content. Default: $section-content-bg.
+// $content-padding - Padding around content. Default: $section-content-padding.
+// $section-border-size - Width of border (i.e. 1px). Default: $section-border-size.
+// $section-border-style - Style of border (i.e. solid). Default: $section-border-style.
+// $section-border-color - Color of border. Default: $section-border-color.
+@mixin section-style(
+  $section-type:accordion, 
+  $title-selector: $title-selector, 
+  $content-selector: $content-selector, 
+  $title-padding:$section-title-padding, 
+  $title-color:$section-title-color, 
+  $title-font-size:$section-font-size, 
+  $title-bg:$section-title-bg, 
+  $title-bg-hover:$section-title-bg-hover, 
+  $title-bg-active:$section-title-bg-active, 
+  $title-color-active:$section-title-color-active, 
+  $content-bg:$section-content-bg, 
+  $content-padding:$section-content-padding, 
+  $section-border-size:$section-border-size, 
+  $section-border-style:$section-border-style, 
+  $section-border-color: $section-border-color) {
 
   // Default Styles
   & > #{$title-selector} {
@@ -245,15 +279,13 @@ $active-region-selector: ".active" !default;
 
   // Styles for when tabs
   @else if $section-type == tabs {
-
-	&#{$active-region-selector} > #{$title-selector} {
-      border-bottom: 0;
-	}
+  	&#{$active-region-selector} > #{$title-selector} {
+        border-bottom: 0;
+  	}
   }
 
   // Styles for when Vertical Tabs
   @else if $section-type == vertical-tabs {
-
     &#{$active-region-selector} {
 	  padding-#{$default-float}: $section-vertical-tabs-title-width - em-calc(1px);
 
@@ -264,19 +296,54 @@ $active-region-selector: ".active" !default;
   }
 }
 
+
+// Creates section container
+//
+// $base-style - Apply base styles to section container.
+// $section-type -Type of section. Default: accordion. Options: accordion, tabs, vertical-tabs.
 @mixin section-container($base-style:true, $section-type:accordion)  {
   @include section-container-base($section-type);
   @include section-container-style($section-type);
 }
 
-@mixin section($section-type:accordion, $title-selector:$title-selector, $content-selector: $content-selector, $title-padding:$section-title-padding, $title-color:$section-title-color, $title-font-size:$section-font-size, $title-bg:$section-title-bg, $title-bg-hover:$section-title-bg-hover, $title-bg-active:$section-title-bg-active, $title-color-active:$section-title-color-active, $content-bg:$section-content-bg, $content-padding:$section-content-padding, $section-border-size:$section-border-size, $section-border-style:$section-border-style, $section-border-color: $section-border-color) {
+// Creates section
+//
+// $section-type -Type of section. Default: accordion. Options: accordion, tabs, vertical-tabs.
+// $title-selector - CSS selector for the title (i.e. .title). Default: $title-selector.
+// $content-selector - CSS selector for content (i.e. .content). Default: $content-selector.
+// $title-padding - Padding around title selector. Default: $section-title-padding.
+// $title-color - Color of the title. Default: $section-title-color.
+// $title-font-size - Font size of the title. Default: $section-font-size.
+// $title-bg - Background of title. Default: $section-title-bg.
+// $title-bg-hover - Background of title on hover. Default: $section-title-bg-hover.
+// $title-bg-active - Background of title when active. Default: $section-title-bg-active.
+// $title-color-active - Color of title when active. Default: $section-title-color-active.
+// $content-bg - Background of content. Default: $section-content-bg.
+// $content-padding - Padding around content. Default: $section-content-padding.
+// $section-border-size - Width of border (i.e. 1px). Default: $section-border-size.
+// $section-border-style - Style of border (i.e. solid). Default: $section-border-style.
+// $section-border-color - Color of border. Default: $section-border-color.
+@mixin section(
+  $section-type:accordion, 
+  $title-selector:$title-selector, 
+  $content-selector: $content-selector, 
+  $title-padding:$section-title-padding, 
+  $title-color:$section-title-color, 
+  $title-font-size:$section-font-size, 
+  $title-bg:$section-title-bg, 
+  $title-bg-hover:$section-title-bg-hover, 
+  $title-bg-active:$section-title-bg-active, 
+  $title-color-active:$section-title-color-active, 
+  $content-bg:$section-content-bg, 
+  $content-padding:$section-content-padding, 
+  $section-border-size:$section-border-size, 
+  $section-border-style:$section-border-style, 
+  $section-border-color: $section-border-color) {
   @include section-base($section-type);
   @include section-style($section-type, $title-selector, $content-selector, $title-padding, $title-color, $title-font-size, $title-bg, $title-bg-hover, $title-bg-active, $title-color-active, $content-bg, $content-padding, $section-border-size, $section-border-style, $section-border-color);
 }
 
 @if $include-html-section-classes {
-
-  /* Sections */
 
   [data-section=''], [data-section='auto'], .section-container.auto,
   [data-section='vertical-tabs'], .section-container.vertical-tabs,

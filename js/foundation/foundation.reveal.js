@@ -59,7 +59,7 @@
 
       $(this.scope)
         .off('.fndtn.reveal')
-        .on('click.fndtn.reveal', '[data-reveal-id]', function (e) {
+        .on('click.fndtn.reveal', '[data-reveal-id]:not([disabled])', function (e) {
           e.preventDefault();
 
           if (!self.locked) {
